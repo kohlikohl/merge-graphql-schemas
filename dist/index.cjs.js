@@ -4243,12 +4243,12 @@ var toConsumableArray = function (arr) {
 };
 
 // Test
-var _isMergeableTypeDefinition = function _isMergeableTypeDefinition(def) {
-  return isObjectTypeDefinition(def) && mergeableTypes.includes(def.name.value);
+var _isMergeableTypeDefinition = function _isMergeableTypeDefinition(def, all) {
+  return isObjectTypeDefinition(def) && (mergeableTypes.includes(def.name.value) || all);
 };
 
-var _isNonMergeableTypeDefinition = function _isNonMergeableTypeDefinition(def) {
-  return !_isMergeableTypeDefinition(def);
+var _isNonMergeableTypeDefinition = function _isNonMergeableTypeDefinition(def, all) {
+  return !_isMergeableTypeDefinition(def, all);
 };
 
 var _makeCommentNode = function _makeCommentNode(value) {
@@ -4279,7 +4279,7 @@ var _addCommentsToAST = function _addCommentsToAST(nodes) {
 var _makeRestDefinitions = function _makeRestDefinitions(defs) {
   var all = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
   return defs.filter(function (def) {
-    return _isNonMergeableTypeDefinition(def) && !all && !isObjectSchemaDefinition(def);
+    return _isNonMergeableTypeDefinition(def, all) && !isObjectSchemaDefinition(def);
   }).map(function (def) {
     if (isObjectTypeDefinition(def)) {
       return _extends({}, def, {
@@ -4296,7 +4296,7 @@ var _makeMergedDefinitions = function _makeMergedDefinitions(defs) {
 
   // TODO: This function can be cleaner!
   var groupedMergableDefinitions = defs.filter(function (def) {
-    return _isMergeableTypeDefinition(def) || all;
+    return _isMergeableTypeDefinition(def, all);
   }).reduce(function (mergableDefs, def) {
     var name = def.name.value;
 

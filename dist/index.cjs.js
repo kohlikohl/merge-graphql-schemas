@@ -4294,7 +4294,7 @@ var _makeRestDefinitions = function _makeRestDefinitions(defs) {
 var _makeMergedFieldDefinitions = function _makeMergedFieldDefinitions(merged, candidate) {
   return _addCommentsToAST(candidate.fields).reduce(function (fields, field) {
     var original = merged.fields.find(function (base) {
-      return base.name.value === field.name.value;
+      return base.name && typeof base.name.value !== 'undefined' && field.name && typeof field.name.value !== 'undefined' && base.name.value === field.name.value;
     });
     if (!original) {
       fields.push(field);

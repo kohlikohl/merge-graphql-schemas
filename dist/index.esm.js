@@ -4285,6 +4285,20 @@ var _makeRestDefinitions = function _makeRestDefinitions(defs) {
   });
 };
 
+var _makeMergedFieldDefinitions = function _makeMergedFieldDefinitions(merged, candidate) {
+  return _addCommentsToAST(candidate.fields).reduce(function (fields, field) {
+    var original = merged.fields.find(function (base) {
+      return base.name.value === field.name.value;
+    });
+    if (!original) {
+      fields.push(field);
+    } else if (field.type.name.value !== original.type.name.value) {
+      throw new Error(`Conflicting types for ${merged.name.value}.${field.name.value}: ` + `${field.type.name.value} != ${original.type.name.value}`);
+    }
+    return fields;
+  }, merged.fields);
+};
+
 var _makeMergedDefinitions = function _makeMergedDefinitions(defs) {
   var all = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
 
@@ -4304,7 +4318,7 @@ var _makeMergedDefinitions = function _makeMergedDefinitions(defs) {
 
     return _extends({}, mergableDefs, {
       [name]: _extends({}, mergableDefs[name], {
-        fields: [].concat(toConsumableArray(mergableDefs[name].fields), toConsumableArray(_addCommentsToAST(def.fields)))
+        fields: _makeMergedFieldDefinitions(mergableDefs[name], def)
       })
     });
   }, {

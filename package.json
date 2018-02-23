@@ -11,8 +11,8 @@
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
   "scripts": {
-    "rollup:build": "BABEL_ENV=build rollup -c",
-    "rollup:watch": "BABEL_ENV=build rollup -c -w",
+    "rollup:build": "rollup -c --environment BABEL_ENV:build",
+    "rollup:watch": "rollup -c -w --environment BABEL_ENV:build",
     "prepare": "npm run rollup:build",
     "lint": "eslint ./src",
     "lintfix": "eslint ./src --fix",
